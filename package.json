@@ -1,16 +1,15 @@
 {
-  "name": "@foxglove/three-text",
-  "version": "0.3.1",
+  "name": "@lichtblick/three-text",
+  "version": "1.0.0",
   "description": "Render text in 3D using Signed Distance Fields",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/foxglove/three-text.git"
+    "url": "https://github.com/lichtblick-suite/three-text.git"
   },
   "author": {
-    "name": "Foxglove",
-    "email": "contact@foxglove.dev",
-    "url": "https://foxglove.dev/"
+    "name": "Lichtblick",
+    "email": "lichtblick@bmwgroup.com"
   },
   "module": "dist/esm/index.js",
   "main": "dist/cjs/index.js",
@@ -35,8 +34,8 @@
     "three": ">=0.140.2"
   },
   "devDependencies": {
-    "@foxglove/eslint-plugin": "1.0.1",
-    "@foxglove/tsconfig": "2.0.0",
+    "@lichtblick/eslint-plugin": "1.0.1",
+    "@lichtblick/tsconfig": "1.0.0",
     "@storybook/addon-essentials": "7.6.16",
     "@storybook/react": "7.6.16",
     "@storybook/react-webpack5": "7.6.16",
@@ -44,8 +43,8 @@
     "@types/node": "20.12.8",
     "@types/react": "18.3.3",
     "@types/three": "0.160.0",
-    "@typescript-eslint/eslint-plugin": "7.0.2",
-    "@typescript-eslint/parser": "7.0.2",
+    "@typescript-eslint/eslint-plugin": "8.6.0",
+    "@typescript-eslint/parser": "8.6.0",
     "chromatic": "11.3.2",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",

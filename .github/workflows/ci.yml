@@ -8,7 +8,8 @@ on:
     branches: ["*"]
 
 jobs:
-  build:
+  push:
+    name: push
     runs-on: ubuntu-latest
 
     permissions:
@@ -38,28 +39,3 @@ jobs:
         run: npm publish package.tgz --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
-
-  chromatic:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Required for Chromatic
-
-      - run: corepack enable
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-          registry-url: https://registry.npmjs.org
-          cache: yarn
-
-      - run: yarn install --immutable
-
-      # Chromatic only runs on pushes or pulls to our source repo
-      - name: Publish to Chromatic
-        uses: chromaui/action@v1
-        if: ${{ github.event.repository.full_name == 'foxglove/three-text' }}
-        with:
-          projectToken: de34ab810be0
-          autoAcceptChanges: main
-          exitOnceUploaded: true

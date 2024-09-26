@@ -1,6 +1,6 @@
 extends:
-  - plugin:@foxglove/base
-  - plugin:@foxglove/jest
+  - plugin:@lichtblick/base
+  - plugin:@lichtblick/jest
   - plugin:storybook/recommended
   - plugin:react/recommended
   - plugin:react/jsx-runtime
@@ -18,15 +18,18 @@ rules:
 overrides:
   - files: ["*.ts", "*.tsx"]
     extends:
-      - plugin:@foxglove/typescript
+      - plugin:@lichtblick/typescript
     parserOptions:
       project: tsconfig.json
 
     rules:
       "@typescript-eslint/no-unsafe-assignment": off
       "@typescript-eslint/no-unsafe-member-access": off
-      "@foxglove/prefer-hash-private": off
 
   - files: ["*.stories.tsx"]
     rules:
       "filenames/match-exported": off
+
+settings:
+  react:
+    version: detect

@@ -140,7 +140,7 @@ function BasicTemplate({
   positionY: number;
   positionZ: number;
   logDepthBuffer: boolean;
-}): JSX.Element {
+}): React.JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [storyScene] = useState(() => new StoryScene({ logDepthBuffer }));

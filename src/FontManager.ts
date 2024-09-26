@@ -46,7 +46,7 @@ export type FontManagerOptions = {
  * generate attributes for rendering text using the atlas.
  */
 export class FontManager extends EventDispatcher<{ atlasChange: object }> {
-  private alphabet = "";
+  #alphabet = "";
   atlasData: AtlasData = {
     data: new Uint8ClampedArray(),
     width: 0,
@@ -70,8 +70,8 @@ export class FontManager extends EventDispatcher<{ atlasChange: object }> {
   update(newChars: string): void {
     let needsUpdate = false;
     for (const char of newChars) {
-      if (!this.alphabet.includes(char)) {
-        this.alphabet += char;
+      if (!this.#alphabet.includes(char)) {
+        this.#alphabet += char;
         needsUpdate = true;
       }
     }
@@ -97,10 +97,10 @@ export class FontManager extends EventDispatcher<{ atlasChange: object }> {
     let rowHeight = 0;
     let lineHeight = 0;
     let maxAscent = 0;
-    for (const char of this.alphabet) {
+    for (const char of this.#alphabet) {
       if (charInfo[char] != undefined) {
         throw new Error(
-          `Duplicate character in alphabet: ${char} (${char.codePointAt(0) ?? "undefined"})`,
+          `Duplicate character in alphabet: ${char} (${char.codePointAt(0)?.toString() ?? "undefined"})`,
         );
       }
       const sdf = tinysdf.draw(char);
@@ -110,7 +110,9 @@ export class FontManager extends EventDispatcher<{ atlasChange: object }> {
         rowHeight = 0;
       }
       if (y + sdf.height >= atlasHeight) {
-        throw new Error(`Unable to fit all ${this.alphabet.length} characters in font atlas`);
+        throw new Error(
+          `Unable to fit all ${this.#alphabet.length.toString()} characters in font atlas`,
+        );
       }
       rowHeight = Math.max(rowHeight, sdf.height);
       lineHeight = Math.max(lineHeight, rowHeight);

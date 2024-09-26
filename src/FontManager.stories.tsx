@@ -21,7 +21,7 @@ function atlasToImageData(atlas: AtlasData) {
   return img;
 }
 
-export function Atlas(): JSX.Element {
+export function Atlas(): React.JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     if (!canvasRef.current) {
@@ -39,7 +39,7 @@ export function Atlas(): JSX.Element {
   return <canvas ref={canvasRef} style={{ backgroundColor: "black" }} />;
 }
 
-export function Layout(): JSX.Element {
+export function Layout(): React.JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     if (!canvasRef.current) {

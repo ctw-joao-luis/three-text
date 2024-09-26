@@ -223,17 +223,17 @@ export class Label extends THREE.Object3D {
     });
 
     labelPool.addEventListener("atlasChange", () => {
-      this._handleAtlasChange();
+      this.#handleAtlasChange();
     });
-    this._handleAtlasChange();
+    this.#handleAtlasChange();
   }
 
-  private _handleAtlasChange() {
+  #handleAtlasChange() {
     this.material.uniforms.uTextureSize!.value[0] = this.labelPool.atlasTexture.image.width;
     this.material.uniforms.uTextureSize!.value[1] = this.labelPool.atlasTexture.image.height;
     this.setLineHeight(this.lineHeight);
-    this._needsUpdateLayout = true;
-    this._updateLayoutIfNeeded();
+    this.#needsUpdateLayout = true;
+    this.#updateLayoutIfNeeded();
   }
 
   dispose(): void {
@@ -243,7 +243,7 @@ export class Label extends THREE.Object3D {
     this.mesh.dispose();
   }
 
-  private reallocateAttributeBufferIfNeeded(numChars: number) {
+  #reallocateAttributeBufferIfNeeded(numChars: number) {
     const requiredLength = numChars * 10 * Float32Array.BYTES_PER_ELEMENT;
     if (this.instanceAttrData.byteLength < requiredLength) {
       this.instanceAttrData = new Float32Array(requiredLength);
@@ -259,15 +259,15 @@ export class Label extends THREE.Object3D {
   setText(text: string): void {
     if (text !== this.text) {
       this.text = text;
-      this._needsUpdateLayout = true;
+      this.#needsUpdateLayout = true;
       this.labelPool.updateAtlas(text);
-      this._updateLayoutIfNeeded();
+      this.#updateLayoutIfNeeded();
     }
   }
 
-  private _needsUpdateLayout = false;
-  private _updateLayoutIfNeeded() {
-    if (!this._needsUpdateLayout) {
+  #needsUpdateLayout = false;
+  #updateLayoutIfNeeded() {
+    if (!this.#needsUpdateLayout) {
       return;
     }
     const layoutInfo = this.labelPool.fontManager.layout(this.text);
@@ -278,7 +278,7 @@ export class Label extends THREE.Object3D {
 
     this.geometry.instanceCount = this.mesh.count = layoutInfo.chars.length;
 
-    this.reallocateAttributeBufferIfNeeded(layoutInfo.chars.length);
+    this.#reallocateAttributeBufferIfNeeded(layoutInfo.chars.length);
 
     let i = 0;
     for (const char of layoutInfo.chars) {
@@ -300,7 +300,7 @@ export class Label extends THREE.Object3D {
       this.instanceAttrData[i++] = char.height;
     }
     this.instanceAttrBuffer.needsUpdate = true;
-    this._needsUpdateLayout = false;
+    this.#needsUpdateLayout = false;
   }
 
   /** Values should be in working (linear-srgb) color space */
@@ -329,7 +329,7 @@ export class Label extends THREE.Object3D {
     this.material.depthWrite = !transparent;
   }
 
-  // eslint-disable-next-line @foxglove/no-boolean-parameters
+  // eslint-disable-next-line @lichtblick/no-boolean-parameters
   setBillboard(billboard: boolean): void {
     this.material.uniforms.uBillboard!.value = billboard;
     this.pickingMaterial.uniforms.uBillboard!.value = billboard;
@@ -339,7 +339,7 @@ export class Label extends THREE.Object3D {
    * Enable or disable size attenuation. Setting this to `false` also requires that billboarding is
    * enabled.
    */
-  // eslint-disable-next-line @foxglove/no-boolean-parameters
+  // eslint-disable-next-line @lichtblick/no-boolean-parameters
   setSizeAttenuation(sizeAttenuation: boolean): void {
     this.material.uniforms.uSizeAttenuation!.value = sizeAttenuation;
     this.pickingMaterial.uniforms.uSizeAttenuation!.value = sizeAttenuation;
@@ -365,8 +365,8 @@ export class Label extends THREE.Object3D {
 export class LabelPool extends EventDispatcher<{ scaleFactorChange: object; atlasChange: object }> {
   atlasTexture: THREE.DataTexture;
 
-  private availableLabels: Label[] = [];
-  private disposed = false;
+  #availableLabels: Label[] = [];
+  #disposed = false;
 
   static QUAD_POINTS: THREE.Vector3Tuple[] = [
     [0, 0, 0],
@@ -408,16 +408,16 @@ export class LabelPool extends EventDispatcher<{ scaleFactorChange: object; atla
     );
 
     this.fontManager.addEventListener("atlasChange", () => {
-      this._updateAtlasTexture();
+      this.#updateAtlasTexture();
     });
-    this._updateAtlasTexture();
+    this.#updateAtlasTexture();
   }
 
   updateAtlas(text: string): void {
     this.fontManager.update(text);
   }
 
-  private _updateAtlasTexture() {
+  #updateAtlasTexture() {
     const data = new Uint8ClampedArray(this.fontManager.atlasData.data.length * 4);
     for (let i = 0; i < this.fontManager.atlasData.data.length; i++) {
       data[i * 4 + 0] = data[i * 4 + 1] = data[i * 4 + 2] = 1;
@@ -434,23 +434,23 @@ export class LabelPool extends EventDispatcher<{ scaleFactorChange: object; atla
   }
 
   acquire(): Label {
-    return this.availableLabels.pop() ?? new Label(this);
+    return this.#availableLabels.pop() ?? new Label(this);
   }
 
   release(label: Label): void {
-    if (this.disposed) {
+    if (this.#disposed) {
       label.dispose();
     } else {
       label.removeFromParent();
-      this.availableLabels.push(label);
+      this.#availableLabels.push(label);
     }
   }
 
   dispose(): void {
-    for (const label of this.availableLabels) {
+    for (const label of this.#availableLabels) {
       label.dispose();
     }
     this.atlasTexture.dispose();
-    this.disposed = true;
+    this.#disposed = true;
   }
 }
