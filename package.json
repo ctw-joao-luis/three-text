@@ -1,6 +1,6 @@
 {
   "name": "@lichtblick/three-text",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Render text in 3D using Signed Distance Fields",
   "license": "MIT",
   "repository": {
